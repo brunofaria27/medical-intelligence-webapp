@@ -1,10 +1,10 @@
 enum AiApiResultEnum {
-    Melanoma,
-    MelanocyticNevus,
-    BasalCellCarcinoma,
-    ActinicKeratosis,
-    BenignKeratosis,
-    Dermatofibroma,
-    VascularLesion,
-    SquamousCellCarcinoma
+  Melanoma,
+  MelanocyticNevus,
+  BasalCellCarcinoma,
+  ActinicKeratosis,
+  BenignKeratosis,
+  Dermatofibroma,
+  VascularLesion,
+  SquamousCellCarcinoma,
 }

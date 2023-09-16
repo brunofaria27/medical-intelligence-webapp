@@ -1,4 +1,4 @@
 interface ImageProcessingResponse {
-    AiReponse: AiResponse,
-    Doctors: Doctor[],
+  AiReponse: AiResponse
+  Doctors: Doctor[]
 }

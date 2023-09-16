@@ -1,5 +1,5 @@
-interface AiResponse{
-    result: Boolean,
-    type: AiApiResultEnum,
-    acurracy: Number,
+interface AiResponse {
+  result: Boolean
+  type: AiApiResultEnum
+  acurracy: Number
 }
