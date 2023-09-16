@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken'
 
-import { UserAttributes } from '../typescript/user'
+import { UserAttributes } from '../models/UserAttributes'
 
 const jwtSecret = process.env.JWT_SECRET
 
@@ -14,14 +14,4 @@ export const validateJwt: (token?: string) => UserAttributes = (
 
 export const signJwt = (user: UserAttributes) => {
   return jwt.sign(user, jwtSecret)
-}
-
-export const verifyAdmin = async (token?: string) => {
-  const validatedUser = await validateJwt(token)
-
-  if (validatedUser.userType !== 'Admin') {
-    return { status: 403, error: 'Access Denied.' }
-  }
-
-  return { status: 200, error: 'Access granted.' }
 }

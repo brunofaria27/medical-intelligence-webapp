@@ -2,7 +2,7 @@
   "name": "discord-bot",
   "version": "1.0.0",
   "main": "build/index.js",
-  "repository": "https://github.com/brunofaria27/discord-bot.git",
+  "repository": "https://github.com/brunofaria27/medical-intelligence-webapp",
   "author": "Bruno Faria",
   "license": "MIT",
   "scripts": {
