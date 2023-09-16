@@ -10,7 +10,9 @@ import {
 } from '../services/server'
 
 export const userRouter = Router()
-
+/* TODO - {
+  Se o user for MEDICO => Deve passar coordenadas do consultório e um meio de contato (ideia = coordenada ser capturada no front atraves de um mapinha)
+} */
 userRouter.post('/registration', async (req, res, next) => {
   let client: mongoDB.MongoClient | null = null
 
