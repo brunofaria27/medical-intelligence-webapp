@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb'
 import * as mongoDB from 'mongodb'
 
 import { Router } from 'express'
@@ -9,11 +8,13 @@ import {
   connectToDatabase,
 } from '../services/server'
 import { signJwt } from '../utils/jwt'
-import { UserAttributes } from '../models/UserAttributes'
+import { loginSchema } from '../validators/user_validate'
 
 export const userRouter = Router()
+
 /* TODO - {
   Se o user for MEDICO => Deve passar coordenadas do consultório e um meio de contato (ideia = coordenada ser capturada no front atraves de um mapinha)
+  Lembrar de validar com o yup no validators/user_validator.ts
 } */
 userRouter.post('/registration', async (req, res, next) => {
   let client: mongoDB.MongoClient | null = null
@@ -59,10 +60,14 @@ userRouter.post('/login', async (req, res, next) => {
         .send('Error in registration: collection user undefined')
     }
 
-    const { email, password } = req.body
+    const { email, password } = await loginSchema.validate(req.body)
     const passwordHash = sha256(password)
 
-    const userInstance = await user.findOne({ email, passwordHash: passwordHash });
+    const userInstance = await user.findOne({
+      email,
+      passwordHash: passwordHash,
+    })
+
     if (!userInstance) {
       return res.status(400).send('User not found')
     }

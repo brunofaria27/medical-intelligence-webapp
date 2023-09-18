@@ -1,12 +1,16 @@
-export async function userLogin(email: string, password: string) {
-  const response = await fetch("http://localhost:8000/api/user/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
+import api from "./api";
 
-  const token = await response.json();
+export async function userLogin(email: string, password: string) {
+  const response = await api.post(
+    "/user/login",
+    { email: email, password: password },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const token = await response.data;
   return token;
 }
