@@ -9,14 +9,11 @@ import {
 } from '../services/server'
 import { signJwt } from '../utils/jwt'
 import { loginSchema } from '../validators/user_validate'
+import { getCoordinate } from '../utils/coordinates_maps'
 
 export const userRouter = Router()
 
-/* TODO - {
-  Se o user for MEDICO => Deve passar coordenadas do consultório e um meio de contato (ideia = coordenada ser capturada no front atraves de um mapinha)
-  Lembrar de validar com o yup no validators/user_validator.ts
-} */
-userRouter.post('/registration', async (req, res, next) => {
+userRouter.post('/register', async (req, res, next) => {
   let client: mongoDB.MongoClient | null = null
 
   try {
@@ -27,16 +24,41 @@ userRouter.post('/registration', async (req, res, next) => {
       return res.status(400).send('Error in registration: user undefined')
     }
 
-    const { name, email, password, userType } = req.body
+    const { commonUser } = req.body
 
-    const userByEmail = await user.findOne({ email })
+    const userByEmail = await user.findOne({ email: commonUser.email })
     if (userByEmail) {
-      return res.status(400).send('User already exists')
+      return res.status(406).send({ message: 'User already exists', status: 406 })
     }
 
-    const passwordHash = sha256(password)
+    const passwordHash = sha256(commonUser.password)
+    commonUser.password = passwordHash
 
-    await user.insertOne({ name, email, passwordHash, userType })
+    commonUser['coordinate'] = await getCoordinate(commonUser.street)
+
+    await user.insertOne(commonUser)
+    res.status(200).json({ message: 'User Created' })
+  } catch (error) {
+    next(error)
+  } finally {
+    if (client) {
+      await closeDatabaseConnection(client)
+    }
+  }
+})
+
+userRouter.post('/register-doctor', async (req, res, next) => {
+  let client: mongoDB.MongoClient | null = null
+
+  try {
+    client = await connectToDatabase()
+    const doctor = collections.doctors
+
+    if (!doctor) {
+      return res.status(400).send('Error in registration: doctors undefined')
+    }
+
+    // TODO: criar usuario medico nesse endpoints: ver os atributos
     res.status(200).json({ message: 'User Created' })
   } catch (error) {
     next(error)
@@ -76,7 +98,6 @@ userRouter.post('/login', async (req, res, next) => {
       _id: userInstance._id,
       name: userInstance.name,
       email: userInstance.email,
-      password: userInstance.passwordHash,
       userType: userInstance.userType,
     })
 

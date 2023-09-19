@@ -4,6 +4,7 @@ import * as fs from 'fs'
 
 export const collections: {
   users?: mongoDB.Collection
+  doctors?: mongoDB.Collection
 } = {}
 
 function checkEnvFile() {
@@ -39,9 +40,17 @@ export async function connectToDatabase() {
     )
     collections.users = usersCollection
 
-
     console.log(
       `Successfully connected to collections: ${usersCollection.collectionName}`
+    )
+
+    const doctorsCollection: mongoDB.Collection = db.collection(
+      process.env.COLLECTION_NAME_DOCTORS
+    )
+    collections.doctors = doctorsCollection
+
+    console.log(
+      `Successfully connected to collections: ${doctorsCollection.collectionName}`
     )
 
     console.log(`Successfully connected to database: ${db.databaseName}`)

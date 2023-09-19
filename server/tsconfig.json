@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "lib": ["ES2021"],
+    "lib": ["ES2021", "DOM"],
     "module": "CommonJS",
     "outDir": "build",
     "sourceMap": true,

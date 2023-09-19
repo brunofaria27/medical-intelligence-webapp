@@ -5,6 +5,7 @@ declare global {
       MONGO_URI: string
       DB_NAME: string
       COLLECTION_NAME_USERS: string
+      COLLECTION_NAME_DOCTORS: string
       JWT_SECRET: string
     }
   }
