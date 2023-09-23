@@ -13,15 +13,7 @@ import LockIcon from '@mui/icons-material/Lock';
 
 import { DoctorUserSignUp } from "./DoctorUserSignUp";
 import { CommonUserSignUp } from "./CommonUserSignUp";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#1976d2",
-    },
-  },
-});
+import { darkTheme } from "../style/darkTheme";
 
 export const SignUp = () => {
   const [switchSelected, setSwitchSelected] = React.useState(false);

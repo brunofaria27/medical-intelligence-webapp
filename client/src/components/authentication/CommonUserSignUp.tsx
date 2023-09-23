@@ -11,21 +11,12 @@ import {
   Link,
   TextField,
   ThemeProvider,
-  createTheme,
 } from "@mui/material";
 import { getAddressByCEP } from "../../repositories/maps";
 import { userRegister } from "../../repositories/user_repository";
 import { CommonUser } from "../../models/CommonUser";
 import { AxiosError } from "axios";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#1976d2",
-    },
-  },
-});
+import { darkTheme } from "../style/darkTheme";
 
 export const CommonUserSignUp = () => {
   const [street, setStreet] = React.useState("");

@@ -7,20 +7,23 @@ import {
   CssBaseline,
   Grid,
   Link,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
   ThemeProvider,
-  createTheme,
 } from "@mui/material";
+import { darkTheme } from "../style/darkTheme";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#1976d2",
-    },
-  },
-});
+const roles = ["Nenhuma", "Dermatologista", "Cardiologista", "Urologista"];
 
 export const DoctorUserSignUp = () => {
+  const [selectedRole, setSelectedRole] = React.useState('Nenhuma');
+
+  const handleChangeRole = (event: SelectChangeEvent) => {
+    setSelectedRole(event.target.value);
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -49,7 +52,54 @@ export const DoctorUserSignUp = () => {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              /* TODO: Colocar todos os dados que necessita do medico aqui! */
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="name"
+                  name="name"
+                  required
+                  fullWidth
+                  id="name"
+                  label="Nome"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Senha"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Select
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={selectedRole}
+                  label="Especialização"
+                  onChange={handleChangeRole}
+                  sx={{ width: "100%" }}
+                >
+                  {roles.map((role) => (
+                    <MenuItem key={role} value={role}>
+                      {role}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -57,7 +107,7 @@ export const DoctorUserSignUp = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Cadastrar
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
