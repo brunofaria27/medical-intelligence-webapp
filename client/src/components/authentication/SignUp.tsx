@@ -7,7 +7,6 @@ import {
   Switch,
   ThemeProvider,
   Typography,
-  createTheme,
 } from "@mui/material";
 import LockIcon from '@mui/icons-material/Lock';
 
