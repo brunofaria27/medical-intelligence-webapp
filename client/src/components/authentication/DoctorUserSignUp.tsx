@@ -23,6 +23,12 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { darkTheme } from "../style/darkTheme";
 import { getAddressByCEP } from "../../repositories/maps";
+import { DoctorUser } from "../../models/DoctorUser";
+import { DoctorClinic } from "../../models/DoctorClinic";
+import { imageToBase64 } from "../../utils/image_base64";
+import { Alerts } from "../notifications/Alerts";
+import { AxiosError } from "axios";
+import { doctorRegister } from "../../repositories/user_repository";
 
 const roles = ["Nenhuma", "Dermatologista", "Cardiologista", "Urologista"];
 
@@ -34,6 +40,10 @@ export const DoctorUserSignUp = () => {
   const [state, setState] = React.useState("");
   const [cep, setCEP] = React.useState("");
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+
+  const [errorCreate, setErrorCreate] = React.useState(false);
+  const [errorEmail, setErrorEmail] = React.useState(false);
+  const [errorSelectImage, setErrorSelectImage] = React.useState(false);
 
   function handleRemoveImage() {
     setSelectedFile(null);
@@ -67,17 +77,95 @@ export const DoctorUserSignUp = () => {
     }
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  async function createDoctorUser(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+    const formData = new FormData(event.currentTarget);
+    console.log("teste")
+    const pictureBase64 = await imageToBase64(selectedFile);
+    console.log(pictureBase64)
+    if (pictureBase64 === null) {
+      setErrorSelectImage(true);
+      setTimeout(() => {
+        setErrorSelectImage(false);
+      }, 5000);
+      return;
+    }
+
+    const doctorClinic: DoctorClinic = {
+      clinic_name: formData.get("clinic_name") as string,
+      clinic_about: formData.get("clinic_about") as string,
+      clinic_picture: pictureBase64,
+      clinic_cep: cep,
+      clinic_street: street,
+      clinic_number: number,
+      clinic_city: city,
+      clinic_state: state,
+    };
+
+    const doctorUser: DoctorUser = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+      doctor_category: selectedRole,
+      doctorClinic: doctorClinic,
+      userType: "Médico",
+    };
+
+    try {
+      const response = await doctorRegister(doctorUser);
+
+      if (response) {
+        window.location.href = "/login";
+        setErrorCreate(false);
+        setErrorEmail(false);
+      }
+    } catch (error: unknown) {
+      if (
+        error instanceof AxiosError &&
+        error.response &&
+        error.response.status === 406
+      ) {
+        setErrorCreate(false);
+        setErrorEmail(true);
+        setTimeout(() => {
+          setErrorEmail(false);
+        }, 15000);
+      } else {
+        setErrorEmail(false);
+        setErrorCreate(true);
+        setTimeout(() => {
+          setErrorCreate(false);
+        }, 15000);
+      }
+    }
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
+      {errorCreate && (
+        <Alerts
+          severity={"error"}
+          messageTitle={"Erro!"}
+          message={"Não foi possivel criar o usuário."}
+        />
+      )}
+
+      {errorEmail && (
+        <Alerts
+          severity={"warning"}
+          messageTitle={"Aviso!"}
+          message={"O endereço de email já está cadastrado."}
+        />
+      )}
+
+      {errorSelectImage && (
+        <Alerts
+          severity={"warning"}
+          messageTitle={"Aviso!"}
+          message={"Selecione alguma imagem para a sua clinica."}
+        />
+      )}
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -91,7 +179,7 @@ export const DoctorUserSignUp = () => {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={createDoctorUser}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
@@ -168,7 +256,7 @@ export const DoctorUserSignUp = () => {
                   name="clinic_about"
                   label="Descrição da clinica"
                   type="text"
-                  id="clinic_name"
+                  id="clinic_about"
                   autoComplete="new-clinic_about"
                 />
               </Grid>

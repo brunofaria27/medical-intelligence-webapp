@@ -48,11 +48,16 @@ export const CommonUserSignUp = () => {
       const response = await userRegister(commonUser);
 
       if (response) {
+        window.location.href = "/login";
         setErrorCreate(false);
         setErrorEmail(false);
       }
     } catch (error: unknown) {
-      if (error instanceof AxiosError && error.response && error.response.status === 406) {
+      if (
+        error instanceof AxiosError &&
+        error.response &&
+        error.response.status === 406
+      ) {
         setErrorCreate(false);
         setErrorEmail(true);
         setTimeout(() => {

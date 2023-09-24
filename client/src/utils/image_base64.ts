@@ -1,6 +1,7 @@
-export function imageToBase64(file: File): Promise<string | null> {
+export async function imageToBase64(file: File | null): Promise<string | null> {
   return new Promise((resolve, reject) => {
     if (!file) {
+      resolve(null)
       return;
     }
 
@@ -10,12 +11,12 @@ export function imageToBase64(file: File): Promise<string | null> {
       if (event.target && typeof event.target.result === "string") {
         resolve(event.target.result);
       } else {
-        return;
+        resolve(null)
       }
     };
 
     reader.onerror = (error) => {
-      reject(error);
+      resolve(null)
     };
 
     reader.readAsDataURL(file);
