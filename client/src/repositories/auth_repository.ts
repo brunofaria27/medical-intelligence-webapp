@@ -25,9 +25,28 @@ export async function logoutAuthorization() {
   }
 }
 
+export async function getAuthorizationLogin(token: string) {
+  try {
+    const response = await api.get("/auth/verify-login", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}
+
 export async function getAuthorizationUser(token: string) {
   try {
-    const response = await api.get("/auth/verify-admin", {
+    const response = await api.get("/auth/verify-doctor", {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
