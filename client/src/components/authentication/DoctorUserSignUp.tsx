@@ -80,9 +80,8 @@ export const DoctorUserSignUp = () => {
   async function createDoctorUser(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    console.log("teste")
+    
     const pictureBase64 = await imageToBase64(selectedFile);
-    console.log(pictureBase64)
     if (pictureBase64 === null) {
       setErrorSelectImage(true);
       setTimeout(() => {
