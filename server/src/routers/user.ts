@@ -53,12 +53,30 @@ userRouter.post('/register-doctor', async (req, res, next) => {
   try {
     client = await connectToDatabase()
     const doctor = collections.doctors
+    const user = collections.users
+
+    if (!user) {
+      return res.status(400).send('Error in registration: user undefined')
+    }
 
     if (!doctor) {
       return res.status(400).send('Error in registration: doctors undefined')
     }
 
-    // TODO: criar usuario medico nesse endpoints: ver os atributos
+    const { doctorUser } = req.body
+
+    const userByEmailCommon = await doctor.findOne({ email: doctorUser.email })
+    const userByEmailDoctor = await user.findOne({ email: doctorUser.email })
+    if (userByEmailCommon || userByEmailDoctor) {
+      return res.status(406).send({ message: 'User already exists', status: 406 })
+    }
+
+    const passwordHash = sha256(doctorUser.password)
+    doctorUser.password = passwordHash
+
+    doctorUser['coordinate'] = await getCoordinate(doctorUser.doctorClinic.clinic_street)
+
+    await doctor.insertOne(doctorUser)
     res.status(200).json({ message: 'User Created' })
   } catch (error) {
     next(error)

@@ -11,21 +11,12 @@ import {
   Link,
   TextField,
   ThemeProvider,
-  createTheme,
 } from "@mui/material";
 import { getAddressByCEP } from "../../repositories/maps";
 import { userRegister } from "../../repositories/user_repository";
 import { CommonUser } from "../../models/CommonUser";
 import { AxiosError } from "axios";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#1976d2",
-    },
-  },
-});
+import { darkTheme } from "../style/darkTheme";
 
 export const CommonUserSignUp = () => {
   const [street, setStreet] = React.useState("");
@@ -57,11 +48,16 @@ export const CommonUserSignUp = () => {
       const response = await userRegister(commonUser);
 
       if (response) {
+        window.location.href = "/login";
         setErrorCreate(false);
         setErrorEmail(false);
       }
     } catch (error: unknown) {
-      if (error instanceof AxiosError && error.response && error.response.status === 406) {
+      if (
+        error instanceof AxiosError &&
+        error.response &&
+        error.response.status === 406
+      ) {
         setErrorCreate(false);
         setErrorEmail(true);
         setTimeout(() => {

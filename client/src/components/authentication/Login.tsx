@@ -13,19 +13,10 @@ import {
   TextField,
   ThemeProvider,
   Typography,
-  createTheme,
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import { authLogin } from "../../auth/auth_treatment";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#1976d2",
-    },
-  },
-});
+import { darkTheme } from "../style/darkTheme";
 
 export const Login = () => {
   const [requestError, setRequestError] = React.useState(false);

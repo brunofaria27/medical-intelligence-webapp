@@ -1,4 +1,5 @@
 import { CommonUser } from "../models/CommonUser";
+import { DoctorUser } from "../models/DoctorUser";
 import api from "./api";
 
 export async function userLogin(email: string, password: string) {
@@ -30,10 +31,10 @@ export async function userRegister(commonUser: CommonUser) {
   return data;
 }
 
-export async function doctorRegister() {
+export async function doctorRegister(doctorUser: DoctorUser) {
   const response = await api.post(
     "/user/register-doctor",
-    {}, // TODO: send doctor data
+    { doctorUser },
     {
       headers: {
         "Content-Type": "application/json",
