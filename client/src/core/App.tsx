@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import { LoginPage } from "../pages/LoginPage";
 import { SignUpPage } from "../pages/SignUpPage";
+import { ImagePage } from "../pages/ImagePage";
+import { AccessDeniedPage } from "../pages/AccessDeniedPage";
 
 function App() {
   return (
@@ -8,6 +10,10 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/diagnostic" element={<ImagePage />} />
+
+        {/* Interceptor Section */}
+        <Route path="/access-denied" element={<AccessDeniedPage />} />
       </Routes>
     </>
   );
