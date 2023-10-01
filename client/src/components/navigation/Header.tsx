@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import BiotechIcon from '@mui/icons-material/Biotech';
 import MenuIcon from "@mui/icons-material/Menu";
-import { darkTheme } from "./style/darkTheme";
-import { logoutAuthorization } from "../repositories/auth_repository";
+import { darkTheme } from "../style/darkTheme";
+import { logoutAuthorization } from "../../repositories/auth_repository";
 
 const pages: { [key: string]: string } = {
   Diagnóstico: "/diagnostic",
