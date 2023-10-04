@@ -1,5 +1,9 @@
 import * as React from "react";
 
+import { darkTheme } from "../style/darkTheme";
+import { predictIA } from "../../repositories/predict";
+import { Alerts } from "../notifications/Alerts";
+
 import {
   Box,
   Button,
@@ -17,11 +21,13 @@ import SendIcon from "@mui/icons-material/Send";
 import CloseIcon from "@mui/icons-material/Close";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import InfoIcon from "@mui/icons-material/Info";
-import { darkTheme } from "../style/darkTheme";
 
 export const UploadImage = () => {
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
   const [openInfoModal, setOpenInfoModal] = React.useState(false);
+
+  const [errorSendImage, setErrorSendImage] = React.useState(false);
+  const [successSendImage, setSuccessSendImage] = React.useState(false);
 
   const onDrop = (acceptedFiles: File[]) => {
     setSelectedImage(acceptedFiles[0]);
@@ -31,9 +37,24 @@ export const UploadImage = () => {
     setSelectedImage(null);
   }
 
-  function handleUpload() {
-    if (selectedImage) {
-      // TODO: Tratar envio para o backend
+  async function uploadImage() {
+    try {
+      if (selectedImage) {
+        const predictStatus = await predictIA(selectedImage);
+
+        if (predictStatus) {
+          setSuccessSendImage(true);
+          setSelectedImage(null)
+          setTimeout(() => {
+            setSuccessSendImage(false);
+          }, 2000);
+        }
+      }
+    } catch (error) {
+      setErrorSendImage(true);
+      setTimeout(() => {
+        setErrorSendImage(false);
+      }, 5000);
     }
   }
 
@@ -42,6 +63,22 @@ export const UploadImage = () => {
 
   return (
     <ThemeProvider theme={darkTheme}>
+      {successSendImage && (
+        <Alerts
+          severity={"success"}
+          messageTitle={"Success!"}
+          message={"A imagem foi enviada com sucesso para o diagnóstico."}
+        />
+      )}
+
+      {errorSendImage && (
+        <Alerts
+          severity={"error"}
+          messageTitle={"Error!"}
+          message={"Erro ao enviar a imagem para o diagnóstico."}
+        />
+      )}
+      
       <Container
         sx={{
           marginTop: "50px",
@@ -138,7 +175,7 @@ export const UploadImage = () => {
                 color="success"
                 startIcon={<SendIcon />}
                 sx={{ marginLeft: "10px" }}
-                onClick={handleUpload}
+                onClick={uploadImage}
               >
                 Enviar
               </Button>
