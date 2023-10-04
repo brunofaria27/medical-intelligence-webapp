@@ -23,6 +23,7 @@
     "react-bootstrap": "^2.8.0",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-hot-loader": "^4.13.1",
     "react-multi-carousel": "^2.8.4",
     "react-number-format": "^5.3.1",

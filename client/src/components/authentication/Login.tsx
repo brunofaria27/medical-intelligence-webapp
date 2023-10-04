@@ -33,7 +33,7 @@ export const Login = () => {
       const loginStatus = await authLogin(email.trim(), password);
 
       if (loginStatus) {
-        window.location.href = "/admin"; // TODO: mudar rota de login para pagina de enviar fotos (não criada ainda)
+        window.location.href = "/diagnostic";
         setRequestError(false);
       } else {
         setRequestError(true);

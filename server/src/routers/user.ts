@@ -88,45 +88,59 @@ userRouter.post('/register-doctor', async (req, res, next) => {
 })
 
 userRouter.post('/login', async (req, res, next) => {
-  let client: mongoDB.MongoClient | null = null
+  let client: mongoDB.MongoClient | null = null;
 
   try {
-    client = await connectToDatabase()
-    const user = collections.users
+    client = await connectToDatabase();
+    const user = collections.users;
+    const doctor = collections.doctors;
 
     if (!user) {
-      return res
-        .status(400)
-        .send('Error in registration: collection user undefined')
+      return res.status(400).send('Error in login: collection user undefined');
     }
 
-    const { email, password } = await loginSchema.validate(req.body)
-    const passwordHash = sha256(password)
+    if (!doctor) {
+      return res.status(400).send('Error in login: collection doctor undefined');
+    }
 
-    const userInstance = await user.findOne({
-      email,
-      passwordHash: passwordHash,
-    })
+    const { email, password } = await loginSchema.validate(req.body);
+    const passwordHash = sha256(password);
 
-    if (!userInstance) {
-      return res.status(400).send('User not found')
+    const commonUser = await user.findOne({
+      email: email,
+      password: passwordHash,
+    });
+
+    const doctorUser = await doctor.findOne({
+      email: email,
+      password: passwordHash,
+    });
+
+    if (!commonUser && !doctorUser) {
+      return res.status(400).send('User not found');
+    }
+
+    const userDataToSign = commonUser || doctorUser;
+    if (!userDataToSign) {
+      return res.status(400).send('User not found');
     }
 
     const signedJwt = signJwt({
-      _id: userInstance._id,
-      name: userInstance.name,
-      email: userInstance.email,
-      userType: userInstance.userType,
-    })
+      _id: userDataToSign._id,
+      name: userDataToSign.name,
+      email: userDataToSign.email,
+      userType: userDataToSign.userType,
+    });
 
     res.status(200).json({
       token: signedJwt,
-    })
+    });
   } catch (error) {
-    next(error)
+    next(error);
   } finally {
     if (client) {
-      await closeDatabaseConnection(client)
+      await closeDatabaseConnection(client);
     }
   }
-})
+});
+
