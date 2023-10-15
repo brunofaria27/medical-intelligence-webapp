@@ -24,15 +24,15 @@ def image_upload():
     if file:
         CLASS_MAPPING = {0: 'Actinic keratosis', 1: 'Basal cell carcinoma', 2: 'Benign keratosis', 3: 'Dermatofibroma', 4: 'Melanocytic nevus', 5: 'Melanoma', 6: 'Squamous cell carcinoma', 7: 'Vascular lesion'}
         IMAGE_SIZE = (224, 224)
-        MODEL_PATH = './treined-model/skin_disease_model.h5'
+        MODEL_PATH = './treined-model/skin_disease_model.h5' # TODO: Mudar para o caminho da IA treinada com PARALELO e ACURACIA MELHOR 
 
         filename = secure_filename(file.filename)
         image_path = f'./uploads/{filename}'
         print(f'File received: {filename}')
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        classification = process_image(image_path, MODEL_PATH, IMAGE_SIZE, CLASS_MAPPING)
+        classification, accuracy = process_image(image_path, MODEL_PATH, IMAGE_SIZE, CLASS_MAPPING)
         os.remove(f'./uploads/{filename}')
-        return jsonify({'classification': classification}), 200
+        return jsonify({'classification': classification, 'accuracy': accuracy}), 200
 
 if __name__ == '__main__':
     app.run()
