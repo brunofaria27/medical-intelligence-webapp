@@ -5,7 +5,6 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
-
 def process_image(image_path, model_path, image_size, CLASS_MAPPING):
     if not os.path.exists(model_path):
         return 'Nenhum modelo de inteligência artificial encontrado.'
@@ -16,4 +15,7 @@ def process_image(image_path, model_path, image_size, CLASS_MAPPING):
     process_image = process_image / 255.0
     prediction = model.predict(process_image)
     predicted_class = np.argmax(prediction, axis=1)
-    return CLASS_MAPPING[predicted_class[0]]
+    predicted_probability = np.max(prediction)
+    predicted_class_name = CLASS_MAPPING[predicted_class[0]]
+    predicted_probability_str = str(predicted_probability)
+    return predicted_class_name, predicted_probability_str
