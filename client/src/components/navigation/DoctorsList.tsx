@@ -41,7 +41,7 @@ export const DoctorsList = () => {
                 marginBottom: "15px",
             }}
             >
-            <strong>LISTA DE MÉDICOS</strong>
+            <strong>MÉDICOS INDICADOS</strong>
             </Typography>
             <hr style={{ marginBottom: "20px" }}></hr>
             <List>
