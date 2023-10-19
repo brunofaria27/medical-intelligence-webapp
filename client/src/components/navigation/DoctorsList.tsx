@@ -9,6 +9,11 @@ import Divider from '@mui/material/Divider';
 import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import { Typography, Container } from "@mui/material";
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import ImageIcon from '@mui/icons-material/Image';
+import WorkIcon from '@mui/icons-material/Work';
+import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 
 
 export const DoctorsList = () => {
@@ -44,24 +49,70 @@ export const DoctorsList = () => {
             <strong>MÉDICOS INDICADOS</strong>
             </Typography>
             <hr style={{ marginBottom: "20px" }}></hr>
-            <List>
-            <ListItem disablePadding>
-                <ListItemButton>
-                {/* <ListItemIcon>
-                    <InboxIcon />
-                </ListItemIcon> */}
-                <ListItemText primary="Médico 1" />
-                </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-                <ListItemButton>
-                {/* <ListItemIcon>
-                    <DraftsIcon />
-                </ListItemIcon> */}
-                <ListItemText primary="Médico 2" />
-                </ListItemButton>
-            </ListItem>
-            </List>
+    <List sx={{ width: '100%', maxWidth: 360, bgcolor: "white" }}>
+            <div
+                style={{
+                  paddingLeft: 10,
+                  height: "auto",
+                  marginBottom: 10,
+                  marginTop: 10,
+                  borderWidth: 1,
+                  borderColor: "black",
+                  borderTopColor: "white",
+                  borderRadius: "15px",
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: "left",
+                    color: "black",
+                  }}
+                >
+                  <p>Médico 1</p>
+                  
+                  <div
+                  style={{
+                    textAlign: "left",
+                    color: "rgba(180, 180, 180)",
+                  }}
+                >
+                  <p>Endereço</p>
+                </div>
+
+                </div>
+              </div>
+              <div
+                style={{
+                  paddingLeft: 10,
+                  height: "auto",
+                  marginBottom: 10,
+                  marginTop: 10,
+                  borderWidth: 1,
+                  borderColor: "black",
+                  borderTopColor: "white",
+                  borderRadius: "15px",
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: "left",
+                    color: "black",
+                  }}
+                >
+                  <p>Médico 2</p>
+                  
+                  <div
+                  style={{
+                    textAlign: "left",
+                    color: "rgba(180, 180, 180)",
+                  }}
+                >
+                  <p>Endereço</p>
+                </div>
+
+                </div>
+              </div>
+    </List>
         </Container>
       </nav>
     </Box>
