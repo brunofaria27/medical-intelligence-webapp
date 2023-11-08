@@ -6,6 +6,7 @@ declare global {
       DB_NAME: string
       COLLECTION_NAME_USERS: string
       COLLECTION_NAME_DOCTORS: string
+      COLLECTION_DIAGNOSTICS_USERS: string
       JWT_SECRET: string
     }
   }
