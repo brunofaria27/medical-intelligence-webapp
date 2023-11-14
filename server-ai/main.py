@@ -21,7 +21,7 @@ def image_upload():
         print('No selected file')
         return jsonify({'message': 'No selected file'}), 400
     if file:
-        MODEL_PATH = './treined-model/Skin Disease Clssification-81.32.h5'
+        MODEL_PATH = './trained-model/Skin Disease Clssification-81.32.h5'
 
         filename = secure_filename(file.filename)
         image_path = f'./uploads/{filename}'

@@ -33,6 +33,7 @@ export const Login = () => {
       const loginStatus = await authLogin(email.trim(), password);
 
       if (loginStatus) {
+        localStorage.setItem("userEmail", email.trim());
         window.location.href = "/diagnostic";
         setRequestError(false);
       } else {

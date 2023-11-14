@@ -1,5 +1,6 @@
 import * as React from "react";
-
+import { postDiagnostic } from "../../repositories/diagnostic_repository";
+import { Diagnostic } from "../../models/Diagnostic";
 import { darkTheme } from "../style/darkTheme";
 import { predictIA } from "../../repositories/predict";
 import { Alerts } from "../notifications/Alerts";
@@ -16,22 +17,40 @@ import {
 } from "@mui/material";
 import Dropzone from "react-dropzone";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ErrorIcon from '@mui/icons-material/Error';
 import CancelIcon from "@mui/icons-material/Cancel";
 import SendIcon from "@mui/icons-material/Send";
 import CloseIcon from "@mui/icons-material/Close";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
 import InfoIcon from "@mui/icons-material/Info";
 
+export type AiResponse = {
+  accuracy: number,
+  classification: string
+}
+
+const ACURACIA_MINIMA = 0.8
+
 export const UploadImage = () => {
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
+  const [lastImage, setLastImage] = React.useState<File | null>(null);
   const [openInfoModal, setOpenInfoModal] = React.useState(false);
 
   const [errorSendImage, setErrorSendImage] = React.useState(false);
   const [successSendImage, setSuccessSendImage] = React.useState(false);
+  const [aiResponse, setAiResponse] = React.useState({} as AiResponse);
 
   const onDrop = (acceptedFiles: File[]) => {
     setSelectedImage(acceptedFiles[0]);
   };
+
+  const validDiagnostic = React.useMemo(() => {
+    if (lastImage && aiResponse)
+      if (aiResponse.accuracy >= ACURACIA_MINIMA)
+        return true
+    return false
+  }, [aiResponse, lastImage])
+  const showDiagnostic = React.useMemo(() => { return validDiagnostic }, [validDiagnostic])
 
   function handleRemoveImage() {
     setSelectedImage(null);
@@ -40,14 +59,36 @@ export const UploadImage = () => {
   async function uploadImage() {
     try {
       if (selectedImage) {
-        const predictStatus = await predictIA(selectedImage);
+        const userEmail = localStorage.getItem("userEmail");
+        if(!userEmail){
+          console.log("EMAIL FALTANDO");
+          return
+        }
 
-        if (predictStatus) {
+        const response = await predictIA(selectedImage);
+        
+        if (response) {
+          setAiResponse(response);
+          setLastImage(selectedImage);
           setSuccessSendImage(true);
           setSelectedImage(null)
           setTimeout(() => {
             setSuccessSendImage(false);
           }, 2000);
+
+
+          if(response.accuracy >= ACURACIA_MINIMA){
+
+            const diagnostic: Diagnostic = {
+              email: userEmail,
+              date: new Date(),
+              accuracy: response.accuracy,
+              diagnostic: response.classification,
+              file: selectedImage
+            };
+
+            await postDiagnostic(diagnostic);
+          }
         }
       }
     } catch (error) {
@@ -78,7 +119,7 @@ export const UploadImage = () => {
           message={"Erro ao enviar a imagem para o diagnóstico."}
         />
       )}
-      
+
       <Container
         sx={{
           marginTop: "50px",
@@ -194,7 +235,6 @@ export const UploadImage = () => {
                   borderWidth: 1,
                   borderStyle: "dashed",
                   borderColor: "black",
-                  borderTopColor: "white",
                   borderRadius: "15px",
                   backgroundColor: "rgba(243, 243, 243)",
                 }}
@@ -275,6 +315,86 @@ export const UploadImage = () => {
             </Typography>
           </Box>
         </Modal>
+
+        {showDiagnostic ?
+          <Box sx={{display: "flex", gap: "12px", alignItems: "center", marginTop: "16px", marginLeft: "4px"}}>
+            {lastImage &&
+              <Box
+                sx={{
+                }}
+              >
+                <img
+                  src={URL.createObjectURL(lastImage)}
+                  loading="lazy"
+                  alt="Preview Site Images"
+                  style={{
+                    boxShadow: "-4px 4px 4px 0px rgba(0, 0, 0, 0.3)",
+                    maxWidth: "100px",
+                    borderRadius: "10px",
+                  }}
+                />
+              </Box>}
+            <Box>
+              <Box sx={{
+                display: "flex",
+                gap: "8px",
+                alignItems: "flex-end"
+              }}>
+                <Typography
+                  sx={{
+                    fontWeight: 700
+                  }}
+                >
+                  Diagnóstico obtido:
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "20px",
+                    fontWeight: 500
+                  }}
+                >
+                  {aiResponse.classification}
+                </Typography>
+              </Box>
+              <Box sx={{
+                display: "flex",
+                gap: "8px",
+                alignItems: "flex-end"
+              }}>
+                <ErrorIcon color="warning" />
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    marginTop: "8px",
+                    fontWeight: 500
+                  }}
+                >
+                  Apesar da alta acurácia obtida, lembre-se de consultar um médico para obter um diagnóstico preciso.
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          : !validDiagnostic && lastImage &&
+          <Box sx={{
+            display: "flex",
+            gap: "8px",
+            alignItems: "flex-end"
+          }}>
+            <ErrorIcon color="error" />
+            <Typography
+              sx={{
+                fontSize: "14px",
+                marginTop: "15px",
+                fontWeight: 500
+              }}
+            >
+              A acurácia alcançada pela IA não foi o suficiente para obter um diagnóstico aceitável, procure um médico.
+            </Typography>
+          </Box>
+        }
+
+
       </Container>
     </ThemeProvider>
   );

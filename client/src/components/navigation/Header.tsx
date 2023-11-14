@@ -22,6 +22,7 @@ import { logoutAuthorization } from "../../repositories/auth_repository";
 
 const pages: { [key: string]: string } = {
   Diagnóstico: "/diagnostic",
+  Histórico: "/diagnostic/history",
 };
 const settings = ["Logout"];
 
