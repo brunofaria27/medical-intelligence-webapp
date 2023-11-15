@@ -24,8 +24,9 @@ A interface de usuário foi desenvolvida seguindo o seguinte modelo:
 - Pode-se consultar o histórico de classificações.
 
 <div align="center"> 
-    <img align="center" src="assets/interfaces.gif" alt="Seu GIF"/>
+    <img align="center" src="assets/interfaces.gif" alt="Seu GIF" style="width: 500px; max-width: 800px;" />
 </div>
+
 
 <hr>
 
