@@ -1,1 +1,0 @@
-Colocar o modelo treinado enviado aqui: Motivo de não precisa treinar novamente o modelo e demandar alto tempo
