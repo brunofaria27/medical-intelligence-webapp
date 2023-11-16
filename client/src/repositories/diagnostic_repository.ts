@@ -13,11 +13,23 @@ export async function getDiagnostics(email: string) {
   return data;
 }
 
-export async function deleteDiagnostics(email: string, date: Date) {
+export async function deleteDiagnostic(email: string, date: string, time: string) {
   const response = await api.delete("/diagnostic/delete", {
     params: {
       userEmail: email,
-      date: date
+      date: date,
+      time: time
+    },
+  });
+
+  const data = await response.data;
+  return data;
+}
+
+export async function deleteAllDiagnostics(email: string) {
+  const response = await api.delete("/diagnostic/delete-all", {
+    params: {
+      userEmail: email,
     },
   });
 
@@ -26,7 +38,6 @@ export async function deleteDiagnostics(email: string, date: Date) {
 }
 
 export async function postDiagnostic(diagnostic: Diagnostic) {
-  console.log(diagnostic)
   const response = await api.post(
     "/diagnostic/register",
     { diagnostic },

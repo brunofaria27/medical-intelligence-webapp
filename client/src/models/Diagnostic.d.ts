@@ -1,8 +1,7 @@
 export interface Diagnostic {
-    diagnostic: string,
-    accuracy: number,
-    date: Date,
-    email: string,
-    file: File
-  }
-  
+  classification: string,
+  accuracy: number,
+  date: string,
+  time: string,
+  userEmail: string,
+}

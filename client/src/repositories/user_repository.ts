@@ -44,3 +44,11 @@ export async function doctorRegister(doctorUser: DoctorUser) {
   const data = await response.data;
   return data;
 }
+
+export async function getDoctors() {
+  const response = await api.get(
+    "/user/doctors"
+  );
+  const data = await response.data;
+  return data;
+}

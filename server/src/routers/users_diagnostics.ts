@@ -21,9 +21,9 @@ diagnosticRouter.get('/history', async (req, res, next) => {
       return res.status(400).send('Error: userEmail not provided in headers')
     }
 
-    const userDiagnostics = await diagnosticsUsers.find({ 'email': userEmail }).toArray()
+    const userDiagnostics = await diagnosticsUsers.find({ 'userEmail': userEmail }).toArray()
 
-    res.status(200).json({ diagnostics: userDiagnostics })
+    res.status(200).json({ count: userDiagnostics.length, diagnostics: userDiagnostics })
   } catch (error) {
     next(error)
   } finally {
@@ -33,7 +33,7 @@ diagnosticRouter.get('/history', async (req, res, next) => {
   }
 })
 
-diagnosticRouter.post('/delete', async (req, res, next) => {
+diagnosticRouter.delete('/delete', async (req, res, next) => {
   let client: mongoDB.MongoClient | null = null
 
   try {
@@ -44,16 +44,38 @@ diagnosticRouter.post('/delete', async (req, res, next) => {
       return res.status(400).send('Error in registration: diagnostic undefined')
     }
 
-    const email = req.query.userEmail
+    const userEmail = req.query.userEmail
     const date = req.query.date
+    const time = req.query.time
 
-    const diagnostic = await diagnosticsUsers.findOne({email: email, date: date})
-    if (!diagnostic) {
-      return res.status(406).send({ message: 'Diagnostic does not exist', status: 406 })
+    await diagnosticsUsers.findOneAndDelete({ userEmail: userEmail, date: date, time: time })
+
+    res.status(200).json({ message: 'Diagnostic Deleted' })
+  } catch (error) {
+    next(error)
+  } finally {
+    if (client) {
+      await closeDatabaseConnection(client)
+    }
+  }
+})
+
+diagnosticRouter.delete('/delete-all', async (req, res, next) => {
+  let client: mongoDB.MongoClient | null = null
+
+  try {
+    client = await connectToDatabase()
+    const diagnosticsUsers = collections.diagnosticsUsers
+
+    if (!diagnosticsUsers) {
+      return res.status(400).send('Error in registration: diagnostic undefined')
     }
 
-    await diagnosticsUsers.deleteOne(diagnostic)
-    res.status(200).json({ message: 'Diagnostic Deleted' })
+    const userEmail = req.query.userEmail
+
+    await diagnosticsUsers.deleteMany({ 'userEmail': userEmail })
+    res.status(200).json({ message: 'Diagnostics Deleted' })
+
   } catch (error) {
     next(error)
   } finally {
@@ -75,10 +97,9 @@ diagnosticRouter.post('/register', async (req, res, next) => {
     }
 
     const { diagnostic } = req.body
-    console.log(diagnostic)
 
     await diagnosticsUsers.insertOne(diagnostic)
-    
+
     res.status(200).json({ message: 'Diagnostic Added' })
   } catch (error) {
     next(error)
