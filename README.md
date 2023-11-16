@@ -23,9 +23,10 @@ A interface de usuário foi desenvolvida seguindo o seguinte modelo:
 - Irá ser mostrado todos médicos próximos a pessoa após a utilização da classificação.
 - Pode-se consultar o histórico de classificações.
 
-<div align="center"> 
-    <img align="center" src="assets/interfaces.gif" alt="Seu GIF" style="width: 500px; max-width: 800px;" />
-</div>
+
+
+https://github.com/brunofaria27/medical-intelligence-webapp/assets/80405594/62a01666-fcd1-45b0-929c-bdcca02f4533
+
 
 
 <hr>
