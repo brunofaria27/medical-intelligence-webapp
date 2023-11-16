@@ -144,3 +144,49 @@ userRouter.post('/login', async (req, res, next) => {
   }
 });
 
+userRouter.get('/clients', async (req, res, next) => {
+  let client: mongoDB.MongoClient | null = null
+
+  try {
+    client = await connectToDatabase()
+    const user = collections.users
+
+    if (user === undefined) {
+      return res.status(400).send('Error in fetching users: collection undefined')
+    }
+
+    const users = await user.find().toArray()
+
+    res.status(200).json({ users: users })
+  } catch (error) {
+    next(error)
+  } finally {
+    if (client) {
+      await closeDatabaseConnection(client)
+    }
+  }
+})
+
+userRouter.get('/doctors', async (req, res, next) => {
+  let client: mongoDB.MongoClient | null = null
+
+  try {
+    client = await connectToDatabase()
+    const doctor = collections.doctors
+
+    if (doctor === undefined) {
+      return res.status(400).send('Error in fetching doctors: collection undefined')
+    }
+
+    const doctors = await doctor.find().toArray()
+
+    res.status(200).json({ doctors: doctors })
+  } catch (error) {
+    next(error)
+  } finally {
+    if (client) {
+      await closeDatabaseConnection(client)
+    }
+  }
+})
+

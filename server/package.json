@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "date-fns": "^2.30.0",
     "discord-welcome-card": "^4.8.1",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
@@ -26,6 +27,7 @@
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.5.0",
     "pg": "^8.11.3",
+    "saslprep": "^1.0.3",
     "sequelize": "^6.32.1",
     "typescript": "^5.2.2",
     "yup": "^1.2.0"

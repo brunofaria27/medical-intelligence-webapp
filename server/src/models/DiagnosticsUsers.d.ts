@@ -1,3 +1,7 @@
 export interface DiagnosticsUsers {
-    /* TODO: Colocar atributos a serem enviados para o back */
+    classification: string,
+    accuracy: number,
+    date: string,
+    time: string,
+    userEmail: string,
 }
